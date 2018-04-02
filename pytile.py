@@ -1,4 +1,3 @@
-import os
 import sys
 
 import pygame
@@ -842,12 +841,7 @@ class DisplayMain(object):
                             self.lmb_tool = tools.Terrain()
                             self.active_tool_sprite.text = ["Terrain modification"]
                             self.dirty.append(self.active_tool_sprite.update())
-                        if event.key == pygame.K_p:
-                            # Activate experimental pathfinder test tool
-                            # debug("Pathfinder demo tool active")
-                            self.lmb_tool = tools.Pathfinder()
-                            self.active_tool_sprite.text = ["Pathfinder demo"]
-                            self.dirty.append(self.active_tool_sprite.update())
+
                         # Some tools may use the escape key
                         if event.key == pygame.K_ESCAPE:
                             pygame.display.quit()
