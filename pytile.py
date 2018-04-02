@@ -422,8 +422,8 @@ class TrackSprite(pygame.sprite.Sprite):
             try:
                 total_length += a_to_b.get_length() / ab_n.get_length()
             except ZeroDivisionError:
-                total_length += 0
                 pass
+
         # number of sleepers is length, (minus one interval to make the ends line up) divided by interval length
         num_sleepers = float(total_length) / float(TrackSprite.sleeper_spacing)
         try:
@@ -530,19 +530,6 @@ class TrackSprite(pygame.sprite.Sprite):
         if (p[0], p[1]) in sl:
             return [a, d]
         else:
-            p0 = p[0]
-            p1 = p[1]
-            # This gets us +1, +0 or -1, to bring the real value of the end point up to the midpoint
-            p03 = -1 * ((p0 % 3) - 1)
-            p13 = -1 * ((p1 % 3) - 1)
-            # Curve factor is the length between the two endpoints of each of the two curve control points
-            # By varying the length of these control points, we can make the curve smoother and sharper
-            # Taking two control points which make up a path, for each one multiply curve factor by 
-            # either + or - of the offset location of the other point
-            # Find midpoint to real point vectors
-            x = (self.endpoints[p[1]][1] * TrackSprite.track_spacing).length
-            y = (self.endpoints[p[0]][1] * TrackSprite.track_spacing).length
-
             b = self.endpoints[p[0]][0] + self.endpoints[p[0]][1] * self.curve_factor
             c = self.endpoints[p[1]][0] + self.endpoints[p[1]][1] * self.curve_factor
 
