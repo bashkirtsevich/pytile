@@ -1,18 +1,18 @@
+import copy
+
 import pygame
 
 import world
 
 World = world.World()
 
-import copy
-
 # Pre-compute often used multiples
 p = 64
-p2 = p / 2
-p4 = p / 4
-p4x3 = p4 * 3
-p8 = p / 8
-p16 = p / 16
+p2 = int(p / 2)
+p4 = int(p / 4)
+p4x3 = int(p4 * 3)
+p8 = int(p / 8)
+p16 = int(p / 16)
 
 # tile height difference
 ph = 8
