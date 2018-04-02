@@ -24,17 +24,19 @@ class MouseSprite(pygame.sprite.Sprite):
     image = None
     mask = None
 
-    def __init__(self, mouseX, mouseY):
+    def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         if MouseSprite.image is None:
             MouseSprite.image = pygame.Surface((1, 1))
             MouseSprite.image.fill((1, 1, 1))
             MouseSprite.image.set_colorkey((0, 0, 0), pygame.RLEACCEL)
+
         if MouseSprite.mask is None:
             MouseSprite.mask = pygame.mask.from_surface(MouseSprite.image)
+
         self.mask = MouseSprite.mask
         self.image = MouseSprite.image
-        self.rect = pygame.Rect(mouseX, mouseY, 1, 1)
+        self.rect = pygame.Rect(x, y, 1, 1)
 
     def update(self, x, y):
         self.rect = pygame.Rect(x, y, 1, 1)
@@ -421,7 +423,7 @@ class Terrain(Tool):
                 Terrain.ydims = 1
             ret = True
         elif keyname == "s":
-            Terrain.smooth = not (Terrain.smooth)
+            Terrain.smooth = not Terrain.smooth
             ret = True
         if keyname in ["i", "o", "k", "l"]:
             if self.tile:
@@ -641,7 +643,6 @@ class Terrain(Tool):
         Can be set to either raise tiles to the same height or lower them"""
         # Init stacks
         to_check = {}
-        checking = {}
         checked = {}
         # Add all initial tiles to first stack
         for t in tiles:
@@ -669,7 +670,7 @@ class Terrain(Tool):
             checking = to_check
             # To check should be emptied at this point ready to add values this look
             to_check = {}
-            for key, value in checking.iteritems():
+            for key, value in checking.items():
                 # Find all neighbours which haven't already been added to to_check and which aren't already
                 # Needs to be changed so that it checks if this tile has already been checked (will be speedier)
                 for x, y, a, b in zip(c_x, c_y, c_a, c_b):
@@ -677,14 +678,14 @@ class Terrain(Tool):
                     y = key[1] + y
                     # Check if the potential tile has been checked before, if so use the existing object
                     if (x, y) in checked:
-                        ##                        potential = checked[(x,y)]
+                        #                        potential = checked[(x,y)]
                         potential = None
                     elif (x, y) in checking:
-                        ##                        potential = checking[(x,y)]
+                        #                        potential = checking[(x,y)]
                         potential = None
                     elif (x, y) in to_check:
                         potential = to_check[(x, y)]
-                    ##                        potential = None
+                    #                        potential = None
                     # Otherwise create a new tile object for that tile
                     else:
                         potential = World.get_height(x, y)
@@ -712,8 +713,6 @@ class Terrain(Tool):
 
             # Add the last iteration's checked values to the checked stack
             checked.update(checking)
-            # Clear the checking stack
-            checking = {}
 
         # Finally modify the world to reflect changes made by this tool
         for k in checked.keys():
