@@ -115,8 +115,8 @@ class TileSprite(pygame.sprite.Sprite):
     def __init__(self, type, xWorld, yWorld, zWorld, exclude=False):
         pygame.sprite.Sprite.__init__(self)
         if TileSprite.image is None:
-            groundImage = pygame.image.load("textures.png")
-            TileSprite.image = groundImage.convert()
+            ground_image = pygame.image.load("textures.png")
+            TileSprite.image = ground_image.convert()
 
             tile_images_keys = [
                 (["CL11", "CL10", "CL01", "CR11", "CR10", "CR01"], 2),  # Left and Right cliff images
@@ -353,7 +353,6 @@ class DisplayMain(object):
                         self.rmb_tool.mouse_up(event.pos, self.orderedSprites)
                 if event.type == pygame.MOUSEMOTION:
                     # LMB is pressed, update all the time to keep highlight working
-                    ##                    if event.buttons[0] == 1:
                     self.lmb_tool.mouse_move(event.pos, self.orderedSprites)
                     # RMB is pressed, only update while RMB pressed
                     if event.buttons[2] == 1:
@@ -409,7 +408,8 @@ class DisplayMain(object):
                 self.overlay_sprites.draw(self.screen)
                 pygame.display.update(self.dirty)
 
-    def array_to_string(self, array):
+    @staticmethod
+    def array_to_string(array):
         """Convert a heightfield array to a string"""
         return "%s%s%s%s" % (array[0], array[1], array[2], array[3])
 
@@ -470,7 +470,8 @@ class DisplayMain(object):
                 self.orderedSpritesDict[(x, y)] = cliffs
                 self.orderedSprites.add(cliffs, layer=l)
 
-    def get_layer(self, x, y):
+    @staticmethod
+    def get_layer(x, y):
         """Return the layer a sprite should be based on some parameters"""
         return (x + y) * 10
 
@@ -519,7 +520,8 @@ class DisplayMain(object):
                         self.orderedSprites.add(t, layer=l)
                     self.orderedSpritesDict[(x, y)] = add_to_dict
 
-    def make_cliffs(self, x, y):
+    @staticmethod
+    def make_cliffs(x, y):
         """Produce a set of cliff sprites to go with a particular tile"""
         returnvals = []
         # A1/A2 are top and right vertices of tile in front/left of the one we're testing
