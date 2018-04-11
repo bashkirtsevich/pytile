@@ -1060,8 +1060,8 @@ class DisplayMain(object):
         dx = wx - World.WorldWidth2
         dy = wy - (p2)
         # Do some maths
-        x = int((dy + (dx / TileRatio)) / (p2))
-        y = int((dy - (dx / TileRatio)) / (p2))
+        x = int((dy + (dx / TileRatio)) / p2)
+        y = int((dy - (dx / TileRatio)) / p2)
         return x, y
 
 
