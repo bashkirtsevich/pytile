@@ -77,10 +77,12 @@ class TextSprite(pygame.sprite.Sprite):
         # Find the largest width line of text
         maxwidth = max(textimages, key=lambda x: x.get_width()).get_width()
         # Produce an image to hold all of the text strings
-        self.image = pygame.Surface((maxwidth + 2 * (self.borderwidth + self.padding),
-                                     textimages[0].get_height() * len(textimages) \
-                                     + self.line_spacing * (len(textimages) - 1) \
-                                     + 2 * (self.borderwidth + self.padding)))
+        self.image = pygame.Surface(
+            (maxwidth + 2 * (self.borderwidth + self.padding),
+             textimages[0].get_height() * len(textimages) + self.line_spacing * (len(textimages) - 1) + 2 * (
+                     self.borderwidth + self.padding)
+             )
+        )
         self.image.fill(self.bg)
         if self.borderwidth > 0:
             pygame.draw.rect(self.image, self.bordercolour,
