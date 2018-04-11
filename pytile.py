@@ -75,9 +75,7 @@ class TextSprite(pygame.sprite.Sprite):
             textimages.append(self.font.render(t, False, self.fg, self.bg))
 
         # Find the largest width line of text
-        # debug(str(textimages))
         maxwidth = max(textimages, key=lambda x: x.get_width()).get_width()
-        # debug(str(maxwidth))
         # Produce an image to hold all of the text strings
         self.image = pygame.Surface((maxwidth + 2 * (self.borderwidth + self.padding),
                                      textimages[0].get_height() * len(textimages) \
@@ -321,10 +319,8 @@ class TrackSprite(pygame.sprite.Sprite):
         """Try to lookup an image set in the cache, returns image set or False if it isn't cached"""
         key = self.make_cache_key(paths)
         if key in self.cache:
-            # # debug("Looking up cache key %s succeeded!" % str(key))
             return self.cache[key]
         else:
-            # debug("Looking up cache key %s failed, key does not exist" % str(key))
             return False
 
     def make_cache_key(self, paths):
@@ -353,7 +349,6 @@ class TrackSprite(pygame.sprite.Sprite):
         # Each layer is an image, combined is the overall result, 
         # this is always [0] in the array
         key = self.make_cache_key(paths)
-        # debug("Adding cache images with key: %s" % str(key))
         self.cache[key] = surfaces
         return True
 
@@ -362,7 +357,6 @@ class TrackSprite(pygame.sprite.Sprite):
         paths and add it to the cache"""
         # List of surfaces which, when blitted together, make up this graphic
         surfaces = []
-        # debug("Generating images from paths: %s" % paths)
 
         for layer in self.layer_profiles:
             # Generate a new surface to draw onto
@@ -379,7 +373,6 @@ class TrackSprite(pygame.sprite.Sprite):
                         surface = layer["render"](surface)
             surface.set_colorkey(transparent)
             surfaces.append(surface)
-        # debug("surfaces array = %s" % str(surfaces))
         return surfaces
 
     def draw_rails(self, control_points):
@@ -779,13 +772,11 @@ class DisplayMain(object):
                         # so that keys can be used for other things if a tool doesn't want them
                         if event.key == pygame.K_t:
                             # Activate track drawing mode
-                            # debug("Track drawing mode active")
                             self.lmb_tool = tools.Track()
                             self.active_tool_sprite.text = ["Track drawing"]
                             self.dirty.append(self.active_tool_sprite.update())
                         if event.key == pygame.K_h:
                             # Activate terrain modification mode
-                            # debug("Terrain modification mode active")
                             self.lmb_tool = tools.Terrain()
                             self.active_tool_sprite.text = ["Terrain modification"]
                             self.dirty.append(self.active_tool_sprite.update())
@@ -817,7 +808,6 @@ class DisplayMain(object):
                     if event.buttons[2] == 1:
                         self.rmb_tool.mouse_move(event.pos, self.orderedSprites)
                 if event.type == pygame.VIDEORESIZE:
-                    # debug("Screen resized, new dimensions: (%s, %s)" % (event.w, event.h))
                     self.screen_width = event.w
                     self.screen_height = event.h
                     self.screen = pygame.display.set_mode((self.screen_width, self.screen_height), pygame.RESIZABLE)
