@@ -561,87 +561,48 @@ class TileSprite(pygame.sprite.Sprite):
     image = None
     kind = "tile"
 
+    def create_subsurface(self, rect):
+        result = TileSprite.image.subsurface(rect)
+        result.convert()
+        result.set_colorkey((231, 255, 255), pygame.RLEACCEL)
+
+        return result
+
     def __init__(self, type, xWorld, yWorld, zWorld, exclude=False):
         pygame.sprite.Sprite.__init__(self)
         if TileSprite.image is None:
             groundImage = pygame.image.load("textures.png")
             TileSprite.image = groundImage.convert()
-            # Tile images will be composited using rendering later, for now just read them in
-            TileSprite.tile_images = {}
-            # Left and Right cliff images
-            TileSprite.tile_images["CL11"] = TileSprite.image.subsurface((p * 0, p * 2, p, p))
-            TileSprite.tile_images["CL10"] = TileSprite.image.subsurface((p * 1, p * 2, p, p))
-            TileSprite.tile_images["CL01"] = TileSprite.image.subsurface((p * 2, p * 2, p, p))
-            TileSprite.tile_images["CR11"] = TileSprite.image.subsurface((p * 3, p * 2, p, p))
-            TileSprite.tile_images["CR10"] = TileSprite.image.subsurface((p * 4, p * 2, p, p))
-            TileSprite.tile_images["CR01"] = TileSprite.image.subsurface((p * 5, p * 2, p, p))
-            # Flat tile
-            TileSprite.tile_images["0000"] = TileSprite.image.subsurface((0, 0, p, p))
-            # Corner tile (up)
-            TileSprite.tile_images["1000"] = TileSprite.image.subsurface((p * 1, 0, p, p))
-            TileSprite.tile_images["0100"] = TileSprite.image.subsurface((p * 2, 0, p, p))
-            TileSprite.tile_images["0010"] = TileSprite.image.subsurface((p * 3, 0, p, p))
-            TileSprite.tile_images["0001"] = TileSprite.image.subsurface((p * 4, 0, p, p))
-            # Slope tile
-            TileSprite.tile_images["1001"] = TileSprite.image.subsurface((p * 5, 0, p, p))
-            TileSprite.tile_images["1100"] = TileSprite.image.subsurface((p * 6, 0, p, p))
-            TileSprite.tile_images["0110"] = TileSprite.image.subsurface((p * 7, 0, p, p))
-            TileSprite.tile_images["0011"] = TileSprite.image.subsurface((p * 8, 0, p, p))
-            # Corner tile (down)
-            TileSprite.tile_images["1101"] = TileSprite.image.subsurface((p * 9, 0, p, p))
-            TileSprite.tile_images["1110"] = TileSprite.image.subsurface((p * 10, 0, p, p))
-            TileSprite.tile_images["0111"] = TileSprite.image.subsurface((p * 11, 0, p, p))
-            TileSprite.tile_images["1011"] = TileSprite.image.subsurface((p * 12, 0, p, p))
-            # Two height corner
-            TileSprite.tile_images["2101"] = TileSprite.image.subsurface((p * 13, 0, p, p))
-            TileSprite.tile_images["1210"] = TileSprite.image.subsurface((p * 14, 0, p, p))
-            TileSprite.tile_images["0121"] = TileSprite.image.subsurface((p * 15, 0, p, p))
-            TileSprite.tile_images["1012"] = TileSprite.image.subsurface((p * 16, 0, p, p))
-            # "furrow" tiles
-            TileSprite.tile_images["1010"] = TileSprite.image.subsurface((p * 17, 0, p, p))
-            TileSprite.tile_images["0101"] = TileSprite.image.subsurface((p * 18, 0, p, p))
-            for i in TileSprite.tile_images:
-                TileSprite.tile_images[i].convert()
-                TileSprite.tile_images[i].set_colorkey((231, 255, 255), pygame.RLEACCEL)
 
-            # Now add the highlight_images
-            TileSprite.highlight_images = {}
-            TileSprite.highlight_images["00XX"] = TileSprite.image.subsurface((0 * p, 4 * p, p, p))
-            TileSprite.highlight_images["01XX"] = TileSprite.image.subsurface((1 * p, 4 * p, p, p))
-            TileSprite.highlight_images["10XX"] = TileSprite.image.subsurface((2 * p, 4 * p, p, p))
-            TileSprite.highlight_images["11XX"] = TileSprite.image.subsurface((3 * p, 4 * p, p, p))
-            TileSprite.highlight_images["12XX"] = TileSprite.image.subsurface((4 * p, 4 * p, p, p))
-            TileSprite.highlight_images["21XX"] = TileSprite.image.subsurface((5 * p, 4 * p, p, p))
-            TileSprite.highlight_images["22XX"] = TileSprite.image.subsurface((6 * p, 4 * p, p, p))
-            # Set for bottom-right edge
-            TileSprite.highlight_images["X00X"] = TileSprite.image.subsurface((0 * p, 5 * p, p, p))
-            TileSprite.highlight_images["X01X"] = TileSprite.image.subsurface((1 * p, 5 * p, p, p))
-            TileSprite.highlight_images["X10X"] = TileSprite.image.subsurface((2 * p, 5 * p, p, p))
-            TileSprite.highlight_images["X11X"] = TileSprite.image.subsurface((3 * p, 5 * p, p, p))
-            TileSprite.highlight_images["X12X"] = TileSprite.image.subsurface((4 * p, 5 * p, p, p))
-            TileSprite.highlight_images["X21X"] = TileSprite.image.subsurface((5 * p, 5 * p, p, p))
-            TileSprite.highlight_images["X22X"] = TileSprite.image.subsurface((6 * p, 5 * p, p, p))
-            # Set for top-right edge
-            TileSprite.highlight_images["XX00"] = TileSprite.image.subsurface((0 * p, 6 * p, p, p))
-            TileSprite.highlight_images["XX01"] = TileSprite.image.subsurface((1 * p, 6 * p, p, p))
-            TileSprite.highlight_images["XX10"] = TileSprite.image.subsurface((2 * p, 6 * p, p, p))
-            TileSprite.highlight_images["XX11"] = TileSprite.image.subsurface((3 * p, 6 * p, p, p))
-            TileSprite.highlight_images["XX12"] = TileSprite.image.subsurface((4 * p, 6 * p, p, p))
-            TileSprite.highlight_images["XX21"] = TileSprite.image.subsurface((5 * p, 6 * p, p, p))
-            TileSprite.highlight_images["XX22"] = TileSprite.image.subsurface((6 * p, 6 * p, p, p))
-            # Set for top-left edge
-            TileSprite.highlight_images["0XX0"] = TileSprite.image.subsurface((0 * p, 7 * p, p, p))
-            TileSprite.highlight_images["1XX0"] = TileSprite.image.subsurface((1 * p, 7 * p, p, p))
-            TileSprite.highlight_images["0XX1"] = TileSprite.image.subsurface((2 * p, 7 * p, p, p))
-            TileSprite.highlight_images["1XX1"] = TileSprite.image.subsurface((3 * p, 7 * p, p, p))
-            TileSprite.highlight_images["2XX1"] = TileSprite.image.subsurface((4 * p, 7 * p, p, p))
-            TileSprite.highlight_images["1XX2"] = TileSprite.image.subsurface((5 * p, 7 * p, p, p))
-            TileSprite.highlight_images["2XX2"] = TileSprite.image.subsurface((6 * p, 7 * p, p, p))
-            # Nothing
-            TileSprite.highlight_images["None"] = TileSprite.image.subsurface((0, 3 * p, p, p))
-            for i in TileSprite.highlight_images:
-                TileSprite.highlight_images[i].convert()
-                TileSprite.highlight_images[i].set_colorkey((231, 255, 255), pygame.RLEACCEL)
+        tile_images_keys = [
+            (["CL11", "CL10", "CL01", "CR11", "CR10", "CR01"], 2),  # Left and Right cliff images
+            (["0000",  # Flat tile
+              "1000", "0100", "0010", "0001",  # Corner tile (up)
+              "1001", "1100", "0110", "0011",  # Slope tile
+              "1101", "1110", "0111", "1011",  # Corner tile (down)
+              "2101", "1210", "0121", "1012",  # Two height corner
+              "1010", "0101"  # "furrow" tiles
+              ], 0)
+        ]
+        # Tile images will be composited using rendering later, for now just read them in
+        TileSprite.tile_images = dict()
+        for item in tile_images_keys:
+            for idx, key in enumerate(item[0]):
+                TileSprite.tile_images[key] = self.create_subsurface((idx * p, item[1] * p, p, p))
+
+        # Now add the highlight_images
+        highlight_images_keys = [
+            (["None"], 3),
+            (["00XX", "01XX", "10XX", "11XX", "12XX", "21XX", "22XX"], 4),  # bottom-left edge
+            (["X00X", "X01X", "X10X", "X11X", "X12X", "X21X", "X22X"], 5),  # bottom-right edge
+            (["XX00", "XX01", "XX10", "XX11", "XX12", "XX21", "XX22"], 6),  # top-right edge
+            (["0XX0", "1XX0", "0XX1", "1XX1", "2XX1", "1XX2", "2XX2"], 7),  # top-left edge
+        ]
+
+        TileSprite.highlight_images = dict()
+        for item in highlight_images_keys:
+            for idx, key in enumerate(item[0]):
+                TileSprite.highlight_images[key] = self.create_subsurface((idx * p, item[1] * p, p, p))
 
         self.exclude = exclude
         # x,y,zdim are the global 3D world dimensions of the object
