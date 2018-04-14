@@ -584,6 +584,7 @@ class DisplayMain(object):
 
 
 if __name__ == "__main__":
+    import os
     os.environ["SDL_VIDEO_CENTERED"] = "1"
     WINDOW_WIDTH = 1024
     WINDOW_HEIGHT = 768
