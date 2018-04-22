@@ -137,55 +137,55 @@ class TileSprite(pygame.sprite.Sprite):
         image.blit(TileSprite.tile_images[tile_type], (0, 0))
 
         if type_ == 0:
-            sprite_infos = []  # Empty Image
+            sprite_info = []  # Empty Image
         # Corner bits, made up of two images
         elif type_ == 1:
-            sprite_infos = [
+            sprite_info = [
                 ("%sXX%s" % (tile_type[0], tile_type[3]), (0, 0), (0, 0, p4, p)),
                 ("%s%sXX" % (tile_type[0], tile_type[1]), (0, 0), (0, 0, p4, p))
             ]
         elif type_ == 2:
-            sprite_infos = [
+            sprite_info = [
                 ("%s%sXX" % (tile_type[0], tile_type[1]), (p4, 0), (p4, 0, p2, p)),
                 ("X%s%sX" % (tile_type[1], tile_type[2]), (p4, 0), (p4, 0, p2, p))
             ]
         elif type_ == 3:
-            sprite_infos = [
+            sprite_info = [
                 ("X%s%sX" % (tile_type[1], tile_type[2]), (p4x3, 0), (p4x3, 0, p4, p)),
                 ("XX%s%s" % (tile_type[2], tile_type[3]), (p4x3, 0), (p4x3, 0, p4, p))
             ]
         elif type_ == 4:
-            sprite_infos = [
+            sprite_info = [
                 ("XX%s%s" % (tile_type[2], tile_type[3]), (p4, 0), (p4, 0, p2, p)),
                 ("%sXX%s" % (tile_type[0], tile_type[3]), (p4, 0), (p4, 0, p2, p))
             ]
         # Edge bits, made up of one image
         elif type_ == 5:
-            sprite_infos = [
+            sprite_info = [
                 ("%s%sXX" % (tile_type[0], tile_type[1]), (0, 0), None)
             ]
         elif type_ == 6:
-            sprite_infos = [
+            sprite_info = [
                 ("X%s%sX" % (tile_type[1], tile_type[2]), (0, 0), None)
             ]
         elif type_ == 7:
-            sprite_infos = [
+            sprite_info = [
                 ("XX%s%s" % (tile_type[2], tile_type[3]), (0, 0), None)
             ]
         elif type_ == 8:
-            sprite_infos = [
+            sprite_info = [
                 ("%sXX%s" % (tile_type[0], tile_type[3]), (0, 0), None)
             ]
         else:
             # Otherwise highlight whole tile (4 images)
-            sprite_infos = [
+            sprite_info = [
                 ("%s%sXX" % (tile_type[0], tile_type[1]), (0, 0), None),
                 ("X%s%sX" % (tile_type[1], tile_type[2]), (0, 0), None),
                 ("XX%s%s" % (tile_type[2], tile_type[3]), (0, 0), None),
                 ("%sXX%s" % (tile_type[0], tile_type[3]), (0, 0), None),
             ]
 
-        for img_key, dest, area in sprite_infos:
+        for img_key, dest, area in sprite_info:
             image.blit(TileSprite.highlight_images[img_key], dest, area)
 
         image.set_colorkey((231, 255, 255), pygame.RLEACCEL)
