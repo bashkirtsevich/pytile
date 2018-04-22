@@ -182,7 +182,6 @@ class TileSprite(pygame.sprite.Sprite):
         """Update type to match those in the array"""
         self.type = self.array_to_string(World.array[self.xWorld][self.yWorld][1])
 
-    ##        self.update()
     def update(self):
         """Update sprite's rect and other attributes"""
         # What tile type should this tile be?
@@ -250,6 +249,9 @@ class DisplayMain(object):
         # Initialize PyGame
         pygame.init()
 
+        # Initiate the clock
+        self.clock = pygame.time.Clock()
+
         # Set the window Size
         self.screen_width = width
         self.screen_height = height
@@ -263,16 +265,14 @@ class DisplayMain(object):
         # Setup fonts
         self.font = pygame.font.Font(None, 12)
 
+        self.refresh_screen = 1
+
+        self.ordered_sprites = pygame.sprite.LayeredUpdates()
+        self.ordered_sprites_dict = {}
+
     def MainLoop(self):
         """This is the Main Loop of the Game"""
-        # Initiate the clock
-        self.clock = pygame.time.Clock()
-
-        self.orderedSprites = pygame.sprite.LayeredUpdates()
-        self.orderedSpritesDict = {}
-
         self.paint_world()
-        self.refresh_screen = 1
 
         # Sprite used to find what the cursor is selecting
         self.mouseSprite = None
@@ -294,9 +294,7 @@ class DisplayMain(object):
         self.overlay_sprites = pygame.sprite.LayeredUpdates()
 
         # Set up instructions font
-        font_size = 20
-
-        instructions_font = pygame.font.SysFont(pygame.font.get_default_font(), font_size)
+        instructions_font = pygame.font.SysFont(pygame.font.get_default_font(), size=20)
         # Make a text sprite to display the instructions
         self.active_tool_sprite = TextSprite(
             (10, 10), ["Terrain modification"],
@@ -342,23 +340,23 @@ class DisplayMain(object):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     # LMB
                     if event.button == 1:
-                        self.lmb_tool.mouse_down(event.pos, self.orderedSprites)
+                        self.lmb_tool.mouse_down(event.pos, self.ordered_sprites)
                     # RMB
                     if event.button == 3:
-                        self.rmb_tool.mouse_down(event.pos, self.orderedSprites)
+                        self.rmb_tool.mouse_down(event.pos, self.ordered_sprites)
                 if event.type == pygame.MOUSEBUTTONUP:
                     # LMB
                     if event.button == 1:
-                        self.lmb_tool.mouse_up(event.pos, self.orderedSprites)
+                        self.lmb_tool.mouse_up(event.pos, self.ordered_sprites)
                     # RMB
                     if event.button == 3:
-                        self.rmb_tool.mouse_up(event.pos, self.orderedSprites)
+                        self.rmb_tool.mouse_up(event.pos, self.ordered_sprites)
                 if event.type == pygame.MOUSEMOTION:
                     # LMB is pressed, update all the time to keep highlight working
-                    self.lmb_tool.mouse_move(event.pos, self.orderedSprites)
+                    self.lmb_tool.mouse_move(event.pos, self.ordered_sprites)
                     # RMB is pressed, only update while RMB pressed
                     if event.buttons[2] == 1:
-                        self.rmb_tool.mouse_move(event.pos, self.orderedSprites)
+                        self.rmb_tool.mouse_move(event.pos, self.ordered_sprites)
                 if event.type == pygame.VIDEORESIZE:
                     self.screen_width = event.w
                     self.screen_height = event.h
@@ -384,7 +382,7 @@ class DisplayMain(object):
                 self.fps_elapsed = 0
                 ii = self.lmb_tool.tile
                 if ii:
-                    layer = self.orderedSprites.get_layer_of_sprite(ii)
+                    layer = self.ordered_sprites.get_layer_of_sprite(ii)
                     pygame.display.set_caption(
                         "FPS: %i | Tile: (%s,%s) of type: %s, layer: %s | dxoff: %s dyoff: %s" %
                         (self.clock.get_fps(), ii.xWorld, ii.yWorld, ii.type, layer, World.dxoff,
@@ -398,7 +396,7 @@ class DisplayMain(object):
             # we need to refresh the entire screen
             if self.refresh_screen == 1:
                 self.screen.fill((0, 0, 0))
-                self.orderedSprites.draw(self.screen)
+                self.ordered_sprites.draw(self.screen)
                 self.overlay_sprites.draw(self.screen)
                 pygame.display.update()
                 self.refresh_screen = 0
@@ -406,7 +404,7 @@ class DisplayMain(object):
                 for r in self.dirty:
                     self.screen.fill((0, 0, 0), r)
 
-                self.orderedSprites.draw(self.screen)
+                self.ordered_sprites.draw(self.screen)
                 self.overlay_sprites.draw(self.screen)
                 pygame.display.update(self.dirty)
 
@@ -441,8 +439,8 @@ class DisplayMain(object):
             else:
                 tile = World.array[x][y]
             # Look the tile up in the group using the position, this will give us the tile and all its cliffs
-            if (x, y) in self.orderedSpritesDict:
-                tileset = self.orderedSpritesDict[(x, y)]
+            if (x, y) in self.ordered_sprites_dict:
+                tileset = self.ordered_sprites_dict[(x, y)]
                 t = tileset[0]
                 # Add old positions to dirty rect list
                 self.dirty.append(t.rect)
@@ -463,14 +461,14 @@ class DisplayMain(object):
                     t.change_highlight(tile[3])
                 self.dirty.append(t.update_xyz())
 
-                self.orderedSprites.remove(tileset)
+                self.ordered_sprites.remove(tileset)
                 # Recreate the cliffs
                 cliffs = self.make_cliffs(x, y)
                 cliffs.insert(0, t)
 
                 # Add the regenerated sprites back into the appropriate places
-                self.orderedSpritesDict[(x, y)] = cliffs
-                self.orderedSprites.add(cliffs, layer=l)
+                self.ordered_sprites_dict[(x, y)] = cliffs
+                self.ordered_sprites.add(cliffs, layer=l)
 
     @staticmethod
     def get_layer(x, y):
@@ -483,15 +481,15 @@ class DisplayMain(object):
         # highlight defines tiles which should override the tiles stored in World
         # can be accessed in the same way as World
         self.refresh_screen = 1
-        self.orderedSprites.empty()  # This doesn't necessarily delete the sprites though?
-        self.orderedSpritesDict = {}
+        self.ordered_sprites.empty()  # This doesn't necessarily delete the sprites though?
+        self.ordered_sprites_dict = {}
         # Top-left of view relative to world given by self.dxoff, self.dyoff
         # Find the base-level tile at this position
-        topleftTileY, topleftTileX = self.screen_to_iso(World.dxoff, World.dyoff)
+        top_left_tile_y, top_left_tile_x = self.screen_to_iso(World.dxoff, World.dyoff)
         for x1 in range(int(self.screen_width / p + 1)):
             for y1 in range(int(self.screen_height / p4)):
-                x = int(topleftTileX - x1 + math.ceil(y1 / 2.0))
-                y = int(topleftTileY + x1 + math.floor(y1 / 2.0))
+                x = int(top_left_tile_x - x1 + math.ceil(y1 / 2.0))
+                y = int(top_left_tile_y + x1 + math.floor(y1 / 2.0))
                 add_to_dict = []
                 # Tile must be within the bounds of the map
                 if (x >= 0 and y >= 0) and (x < World.WorldX and y < World.WorldY):
@@ -503,8 +501,8 @@ class DisplayMain(object):
                         tile = World.array[x][y]
                     l = self.get_layer(x, y)
                     # Add the main tile
-                    tiletype = self.array_to_string(tile[1])
-                    t = TileSprite(tiletype, x, y, tile[0], exclude=False)
+                    tile_type = self.array_to_string(tile[1])
+                    t = TileSprite(tile_type, x, y, tile[0], exclude=False)
                     # Update cursor highlight for tile (if it has one)
                     try:
                         tile[3]
@@ -514,13 +512,13 @@ class DisplayMain(object):
                         t.change_highlight(tile[3])
 
                     add_to_dict.append(t)
-                    self.orderedSprites.add(t, layer=l)
+                    self.ordered_sprites.add(t, layer=l)
 
                     # Add vertical surfaces (cliffs) for this tile (if any)
                     for t in self.make_cliffs(x, y):
                         add_to_dict.append(t)
-                        self.orderedSprites.add(t, layer=l)
-                    self.orderedSpritesDict[(x, y)] = add_to_dict
+                        self.ordered_sprites.add(t, layer=l)
+                    self.ordered_sprites_dict[(x, y)] = add_to_dict
 
     @staticmethod
     def make_cliffs(x, y):
