@@ -378,8 +378,8 @@ class DisplayMain(object):
                 tile = World.array[x][y]
             # Look the tile up in the group using the position, this will give us the tile and all its cliffs
             if (x, y) in self.ordered_sprites_dict:
-                tileset = self.ordered_sprites_dict[(x, y)]
-                t = tileset[0]
+                tile_set = self.ordered_sprites_dict[(x, y)]
+                t = tile_set[0]
                 # Add old positions to dirty rect list
                 self.dirty.append(t.rect)
 
@@ -399,7 +399,7 @@ class DisplayMain(object):
                     t.change_highlight(tile[3])
                 self.dirty.append(t.update_xyz())
 
-                self.ordered_sprites.remove(tileset)
+                self.ordered_sprites.remove(tile_set)
                 # Recreate the cliffs
                 cliffs = self.make_cliffs(x, y)
                 cliffs.insert(0, t)
