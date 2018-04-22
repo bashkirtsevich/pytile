@@ -103,14 +103,6 @@ class TileSprite(pygame.sprite.Sprite):
     image = None
     kind = "tile"
 
-    @staticmethod
-    def create_subsurface(rect):
-        result = TileSprite.image.subsurface(rect)
-        result.convert()
-        result.set_colorkey((231, 255, 255), pygame.RLEACCEL)
-
-        return result
-
     def __init__(self, type, xWorld, yWorld, zWorld, exclude=False):
         pygame.sprite.Sprite.__init__(self)
         if TileSprite.image is None:
@@ -160,6 +152,14 @@ class TileSprite(pygame.sprite.Sprite):
         self.zdim = 0
         self.type = type
         self.update()
+
+    @staticmethod
+    def create_subsurface(rect):
+        result = TileSprite.image.subsurface(rect)
+        result.convert()
+        result.set_colorkey((231, 255, 255), pygame.RLEACCEL)
+
+        return result
 
     def calc_rect(self):
         """Calculate the current rect of this tile"""
