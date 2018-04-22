@@ -195,7 +195,8 @@ class TileSprite(pygame.sprite.Sprite):
 
         return self.rect
 
-    def array_to_string(self, array):
+    @staticmethod
+    def array_to_string(array):
         """Convert a heightfield array to a string"""
         return "{}{}{}{}".format(*array)
 
