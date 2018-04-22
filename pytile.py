@@ -128,7 +128,7 @@ class TileSprite(pygame.sprite.Sprite):
         self.image = TileSprite.tile_images[self.type]
         self.calc_rect()
 
-    def change_highlight(self, type):
+    def change_highlight(self, type_):
         """Update this tile's image with a highlight"""
         tile_type = self.type
 
@@ -136,43 +136,43 @@ class TileSprite(pygame.sprite.Sprite):
         image.fill((231, 255, 255))
         image.blit(TileSprite.tile_images[tile_type], (0, 0))
 
-        if type == 0:
+        if type_ == 0:
             sprite_infos = []  # Empty Image
         # Corner bits, made up of two images
-        elif type == 1:
+        elif type_ == 1:
             sprite_infos = [
                 ("%sXX%s" % (tile_type[0], tile_type[3]), (0, 0), (0, 0, p4, p)),
                 ("%s%sXX" % (tile_type[0], tile_type[1]), (0, 0), (0, 0, p4, p))
             ]
-        elif type == 2:
+        elif type_ == 2:
             sprite_infos = [
                 ("%s%sXX" % (tile_type[0], tile_type[1]), (p4, 0), (p4, 0, p2, p)),
                 ("X%s%sX" % (tile_type[1], tile_type[2]), (p4, 0), (p4, 0, p2, p))
             ]
-        elif type == 3:
+        elif type_ == 3:
             sprite_infos = [
                 ("X%s%sX" % (tile_type[1], tile_type[2]), (p4x3, 0), (p4x3, 0, p4, p)),
                 ("XX%s%s" % (tile_type[2], tile_type[3]), (p4x3, 0), (p4x3, 0, p4, p))
             ]
-        elif type == 4:
+        elif type_ == 4:
             sprite_infos = [
                 ("XX%s%s" % (tile_type[2], tile_type[3]), (p4, 0), (p4, 0, p2, p)),
                 ("%sXX%s" % (tile_type[0], tile_type[3]), (p4, 0), (p4, 0, p2, p))
             ]
         # Edge bits, made up of one image
-        elif type == 5:
+        elif type_ == 5:
             sprite_infos = [
                 ("%s%sXX" % (tile_type[0], tile_type[1]), (0, 0), None)
             ]
-        elif type == 6:
+        elif type_ == 6:
             sprite_infos = [
                 ("X%s%sX" % (tile_type[1], tile_type[2]), (0, 0), None)
             ]
-        elif type == 7:
+        elif type_ == 7:
             sprite_infos = [
                 ("XX%s%s" % (tile_type[2], tile_type[3]), (0, 0), None)
             ]
-        elif type == 8:
+        elif type_ == 8:
             sprite_infos = [
                 ("%sXX%s" % (tile_type[0], tile_type[3]), (0, 0), None)
             ]
