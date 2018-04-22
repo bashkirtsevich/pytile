@@ -137,35 +137,56 @@ class TileSprite(pygame.sprite.Sprite):
         image.blit(TileSprite.tile_images[tile_type], (0, 0))
 
         if type == 0:
-            pass  # Empty Image
+            sprite_infos = []  # Empty Image
         # Corner bits, made up of two images
         elif type == 1:
-            image.blit(TileSprite.highlight_images["%sXX%s" % (tile_type[0], tile_type[3])], (0, 0), (0, 0, p4, p))
-            image.blit(TileSprite.highlight_images["%s%sXX" % (tile_type[0], tile_type[1])], (0, 0), (0, 0, p4, p))
+            sprite_infos = [
+                ("%sXX%s" % (tile_type[0], tile_type[3]), (0, 0), (0, 0, p4, p)),
+                ("%s%sXX" % (tile_type[0], tile_type[1]), (0, 0), (0, 0, p4, p))
+            ]
         elif type == 2:
-            image.blit(TileSprite.highlight_images["%s%sXX" % (tile_type[0], tile_type[1])], (p4, 0), (p4, 0, p2, p))
-            image.blit(TileSprite.highlight_images["X%s%sX" % (tile_type[1], tile_type[2])], (p4, 0), (p4, 0, p2, p))
+            sprite_infos = [
+                ("%s%sXX" % (tile_type[0], tile_type[1]), (p4, 0), (p4, 0, p2, p)),
+                ("X%s%sX" % (tile_type[1], tile_type[2]), (p4, 0), (p4, 0, p2, p))
+            ]
         elif type == 3:
-            image.blit(TileSprite.highlight_images["X%s%sX" % (tile_type[1], tile_type[2])], (p4x3, 0), (p4x3, 0, p4, p))
-            image.blit(TileSprite.highlight_images["XX%s%s" % (tile_type[2], tile_type[3])], (p4x3, 0), (p4x3, 0, p4, p))
+            sprite_infos = [
+                ("X%s%sX" % (tile_type[1], tile_type[2]), (p4x3, 0), (p4x3, 0, p4, p)),
+                ("XX%s%s" % (tile_type[2], tile_type[3]), (p4x3, 0), (p4x3, 0, p4, p))
+            ]
         elif type == 4:
-            image.blit(TileSprite.highlight_images["XX%s%s" % (tile_type[2], tile_type[3])], (p4, 0), (p4, 0, p2, p))
-            image.blit(TileSprite.highlight_images["%sXX%s" % (tile_type[0], tile_type[3])], (p4, 0), (p4, 0, p2, p))
+            sprite_infos = [
+                ("XX%s%s" % (tile_type[2], tile_type[3]), (p4, 0), (p4, 0, p2, p)),
+                ("%sXX%s" % (tile_type[0], tile_type[3]), (p4, 0), (p4, 0, p2, p))
+            ]
         # Edge bits, made up of one image
         elif type == 5:
-            image.blit(TileSprite.highlight_images["%s%sXX" % (tile_type[0], tile_type[1])], (0, 0))
+            sprite_infos = [
+                ("%s%sXX" % (tile_type[0], tile_type[1]), (0, 0), None)
+            ]
         elif type == 6:
-            image.blit(TileSprite.highlight_images["X%s%sX" % (tile_type[1], tile_type[2])], (0, 0))
+            sprite_infos = [
+                ("X%s%sX" % (tile_type[1], tile_type[2]), (0, 0), None)
+            ]
         elif type == 7:
-            image.blit(TileSprite.highlight_images["XX%s%s" % (tile_type[2], tile_type[3])], (0, 0))
+            sprite_infos = [
+                ("XX%s%s" % (tile_type[2], tile_type[3]), (0, 0), None)
+            ]
         elif type == 8:
-            image.blit(TileSprite.highlight_images["%sXX%s" % (tile_type[0], tile_type[3])], (0, 0))
+            sprite_infos = [
+                ("%sXX%s" % (tile_type[0], tile_type[3]), (0, 0), None)
+            ]
         else:
             # Otherwise highlight whole tile (4 images)
-            image.blit(TileSprite.highlight_images["%s%sXX" % (tile_type[0], tile_type[1])], (0, 0))
-            image.blit(TileSprite.highlight_images["X%s%sX" % (tile_type[1], tile_type[2])], (0, 0))
-            image.blit(TileSprite.highlight_images["XX%s%s" % (tile_type[2], tile_type[3])], (0, 0))
-            image.blit(TileSprite.highlight_images["%sXX%s" % (tile_type[0], tile_type[3])], (0, 0))
+            sprite_infos = [
+                ("%s%sXX" % (tile_type[0], tile_type[1]), (0, 0), None),
+                ("X%s%sX" % (tile_type[1], tile_type[2]), (0, 0), None),
+                ("XX%s%s" % (tile_type[2], tile_type[3]), (0, 0), None),
+                ("%sXX%s" % (tile_type[0], tile_type[3]), (0, 0), None),
+            ]
+
+        for img_key, dest, area in sprite_infos:
+            image.blit(TileSprite.highlight_images[img_key], dest, area)
 
         image.set_colorkey((231, 255, 255), pygame.RLEACCEL)
 
