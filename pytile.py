@@ -465,7 +465,7 @@ class DisplayMain(object):
                         tile = highlight[(x, y)]
                     else:
                         tile = World.array[x][y]
-                    l = self.get_layer(x, y)
+                    layer = self.get_layer(x, y)
                     # Add the main tile
                     tile_type = self.array_to_string(tile[1])
                     t = TileSprite(tile_type, x, y, tile[0], exclude=False)
@@ -478,12 +478,12 @@ class DisplayMain(object):
                         t.change_highlight(tile[3])
 
                     add_to_dict.append(t)
-                    self.ordered_sprites.add(t, layer=l)
+                    self.ordered_sprites.add(t, layer=layer)
 
                     # Add vertical surfaces (cliffs) for this tile (if any)
                     for t in self.make_cliffs(x, y):
                         add_to_dict.append(t)
-                        self.ordered_sprites.add(t, layer=l)
+                        self.ordered_sprites.add(t, layer=layer)
                     self.ordered_sprites_dict[(x, y)] = add_to_dict
 
     @staticmethod
