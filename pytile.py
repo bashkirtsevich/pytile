@@ -36,8 +36,6 @@ p16 = int(p / 16)
 # tile height difference
 ph = 8
 
-FPS_REFRESH = 500
-
 
 class TextSprite(pygame.sprite.Sprite):
     """Subclass of sprite to draw text to the screen"""
@@ -246,6 +244,8 @@ class DisplayMain(object):
     """This handles the main initialisation
     and startup for the display"""
 
+    FPS_REFRESH = 500
+
     def __init__(self, width, height):
         # Initialize PyGame
         pygame.init()
@@ -280,7 +280,7 @@ class DisplayMain(object):
         # Sprite used to find what the cursor is selecting
         self.mouseSprite = None
         # Settings for FPS counter
-        self.fps_refresh = FPS_REFRESH
+        self.fps_refresh = DisplayMain.FPS_REFRESH
         self.fps_elapsed = 0
         # Associated with user input
         self.last_mouse_position = pygame.mouse.get_pos()
