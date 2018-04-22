@@ -240,6 +240,9 @@ class DisplayMain(object):
             bold=False)
         self.overlay_sprites.add(self.active_tool_sprite, layer=100)
 
+        # Clear the stack of dirty tiles
+        self.dirty = []
+
     def main_loop(self):
         """This is the Main Loop of the Game"""
         while True:
@@ -248,9 +251,6 @@ class DisplayMain(object):
             if pygame.event.peek(pygame.QUIT):
                 pygame.display.quit()
                 sys.exit()
-
-            # Clear the stack of dirty tiles
-            self.dirty = []
 
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
