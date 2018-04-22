@@ -155,8 +155,8 @@ class Tool(object):
 
     def subtile_position(self, mousepos, tile):
         """Find the sub-tile position of the cursor"""
-        x = tile.xWorld
-        y = tile.yWorld
+        x = tile.x_world
+        y = tile.y_world
         # Find where this tile would've been drawn on the screen, and subtract the mouse's position
         mousex, mousey = mousepos
         posx = World.WorldWidth2 - (x * (p2)) + (y * (p2)) - p2
@@ -268,7 +268,7 @@ class Track(Tool):
                 subtile = self.subtile_position(position, tile)
                 # If user's clicked in the middle of the tile, don't do anything for the moment
                 if self.collide_convert(subtile, end=True):
-                    self.endpos = [(tile.xWorld, tile.yWorld), self.collide_convert(subtile, end=True)]
+                    self.endpos = [(tile.x_world, tile.y_world), self.collide_convert(subtile, end=True)]
                 else:
                     return False
                 # If we're doing a 2->1 type of track, need to ensure both arrays have same number of items
@@ -278,9 +278,9 @@ class Track(Tool):
                     self.startpos[1].append(self.startpos[1][0])
                 # Add a path to the World for each set of start/end positions
                 for s, e in zip(self.startpos[1], self.endpos[1]):
-                    World.add_path(tile.xWorld, tile.yWorld, [s, e])
+                    World.add_path(tile.x_world, tile.y_world, [s, e])
                 # Set which tiles need updating
-                self.aoe = [(tile.xWorld, tile.yWorld)]
+                self.aoe = [(tile.x_world, tile.y_world)]
                 self.set_aoe_changed(True)
                 # Reset the tool
                 self.endpos = None
@@ -297,7 +297,7 @@ class Track(Tool):
                 subtile = self.subtile_position(position, tile)
                 # If user's clicked in the middle of the tile, don't do anything for the moment
                 if self.collide_convert(subtile, start=True):
-                    self.startpos = [(tile.xWorld, tile.yWorld), self.collide_convert(subtile, start=True)]
+                    self.startpos = [(tile.x_world, tile.y_world), self.collide_convert(subtile, start=True)]
                 else:
                     return False
                 self.tile = tile
@@ -312,12 +312,12 @@ class Track(Tool):
             # First point already selected, find closest endpoint and draw highlight between them
             tile = self.collide_locate(position, collisionlist)
             if tile and not tile.exclude:
-                x = tile.xWorld
-                y = tile.yWorld
+                x = tile.x_world
+                y = tile.y_world
                 subtile = self.subtile_position(position, tile)
                 # If user's clicked in the middle of the tile, don't do anything for the moment
                 if self.collide_convert(subtile, end=True):
-                    self.temp_endpos = [(tile.xWorld, tile.yWorld), self.collide_convert(subtile, end=True)]
+                    self.temp_endpos = [(tile.x_world, tile.y_world), self.collide_convert(subtile, end=True)]
                 else:
                     return False
                 # If we're doing a 2->1 type of track, need to ensure both arrays have same number of items
@@ -350,9 +350,9 @@ class Track(Tool):
                 subtile = self.subtile_position(position, tile)
                 # Only update the highlight if the cursor has changed enough to require it
                 if tile != self.tile or subtile != self.subtile:
-                    self.set_highlight(self.find_highlight(tile.xWorld, tile.yWorld, subtile))
+                    self.set_highlight(self.find_highlight(tile.x_world, tile.y_world, subtile))
                     self.set_aoe_changed(True)
-                    self.aoe = self.find_rect_aoe(tile.xWorld, tile.yWorld)
+                    self.aoe = self.find_rect_aoe(tile.x_world, tile.y_world)
                 else:
                     self.set_aoe_changed(False)
                 self.tile = tile
@@ -427,9 +427,9 @@ class Terrain(Tool):
             ret = True
         if keyname in ["i", "o", "k", "l"]:
             if self.tile:
-                self.set_highlight(self.find_highlight(self.tile.xWorld, self.tile.yWorld, self.subtile))
+                self.set_highlight(self.find_highlight(self.tile.x_world, self.tile.y_world, self.subtile))
                 self.set_aoe_changed(True)
-                self.aoe = self.find_rect_aoe(self.tile.xWorld, self.tile.yWorld)
+                self.aoe = self.find_rect_aoe(self.tile.x_world, self.tile.y_world)
             ret = True
         return ret
 
@@ -481,9 +481,9 @@ class Terrain(Tool):
                 subtile = self.subtile_position(self.current, tile)
                 # Only update the highlight if the cursor has changed enough to require it
                 if tile != self.tile or subtile != self.subtile:
-                    self.set_highlight(self.find_highlight(tile.xWorld, tile.yWorld, subtile))
+                    self.set_highlight(self.find_highlight(tile.x_world, tile.y_world, subtile))
                     self.set_aoe_changed(True)
-                    self.aoe = self.find_rect_aoe(tile.xWorld, tile.yWorld)
+                    self.aoe = self.find_rect_aoe(tile.x_world, tile.y_world)
                 else:
                     self.set_aoe_changed(False)
                 self.tile = tile
@@ -500,7 +500,7 @@ class Terrain(Tool):
                 tile = self.collide_locate(self.current, collisionlist)
                 if tile and not tile.exclude:
                     subtile = self.subtile_position(self.current, tile)
-                    self.tiles = self.find_rect_aoe(tile.xWorld, tile.yWorld)
+                    self.tiles = self.find_rect_aoe(tile.x_world, tile.y_world)
                     # Tiles now contains the primary area of effect for this operation
                     self.tile = tile
                     self.subtile = subtile

@@ -81,19 +81,20 @@ class TileSprite(pygame.sprite.Sprite):
 
         self.exclude = exclude
         # x,y,zdim are the global 3D world dimensions of the object
-        self.xdim = 1.0
-        self.ydim = 1.0
+        self.x_dim = 1.0
+        self.y_dim = 1.0
         # Slope tiles need to have a height so that they appear correctly
         # in front of objects behind them
         # x,y,zWorld are the global 3D world coodinates of the object
-        self.xWorld = x_world
-        self.yWorld = y_world
-        self.zWorld = z_world
-        self.zdim = 0
+        self.x_world = x_world
+        self.y_world = y_world
+        self.z_world = z_world
+        self.z_dim = 0
         self.type = type_
-        self.xpos = None
-        self.ypos = None
+        self.x_pos = None
+        self.y_pos = None
         self.rect = None
+
         self.update()
 
     @staticmethod
@@ -106,24 +107,24 @@ class TileSprite(pygame.sprite.Sprite):
 
     def calc_rect(self):
         """Calculate the current rect of this tile"""
-        x = self.xWorld
-        y = self.yWorld
-        z = self.zWorld
+        x = self.x_world
+        y = self.y_world
+        z = self.z_world
         # Global screen positions
-        self.xpos = World.WorldWidth2 - (x * p2) + (y * p2) - p2
-        self.ypos = (x * p4) + (y * p4) - (z * ph)
+        self.x_pos = World.WorldWidth2 - (x * p2) + (y * p2) - p2
+        self.y_pos = (x * p4) + (y * p4) - (z * ph)
         # Rect position takes into account the offset
-        self.rect = (self.xpos - World.dxoff, self.ypos - World.dyoff, p, p)
+        self.rect = (self.x_pos - World.dxoff, self.y_pos - World.dyoff, p, p)
         return self.rect
 
     def update_xyz(self):
         """Update xyz coords to match those in the array"""
-        self.zWorld = World.array[self.xWorld][self.yWorld][0]
+        self.z_world = World.array[self.x_world][self.y_world][0]
         return self.calc_rect()
 
     def update_type(self):
         """Update type to match those in the array"""
-        self.type = self.array_to_string(World.array[self.xWorld][self.yWorld][1])
+        self.type = self.array_to_string(World.array[self.x_world][self.y_world][1])
 
     def update(self):
         """Update sprite's rect and other attributes"""
@@ -348,7 +349,7 @@ class DisplayMain(object):
                     layer = self.ordered_sprites.get_layer_of_sprite(ii)
                     pygame.display.set_caption(
                         "FPS: %i | Tile: (%s,%s) of type: %s, layer: %s | dxoff: %s dyoff: %s" %
-                        (self.clock.get_fps(), ii.xWorld, ii.yWorld, ii.type, layer, World.dxoff,
+                        (self.clock.get_fps(), ii.x_world, ii.y_world, ii.type, layer, World.dxoff,
                          World.dyoff))
                 else:
                     pygame.display.set_caption(
