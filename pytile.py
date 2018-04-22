@@ -43,7 +43,7 @@ class TileSprite(pygame.sprite.Sprite):
     image = None
     kind = "tile"
 
-    def __init__(self, type, xWorld, yWorld, zWorld, exclude=False):
+    def __init__(self, type_, x_world, y_world, z_world, exclude=False):
         pygame.sprite.Sprite.__init__(self)
         if TileSprite.image is None:
             ground_image = pygame.image.load("textures.png")
@@ -86,11 +86,11 @@ class TileSprite(pygame.sprite.Sprite):
         # Slope tiles need to have a height so that they appear correctly
         # in front of objects behind them
         # x,y,zWorld are the global 3D world coodinates of the object
-        self.xWorld = xWorld
-        self.yWorld = yWorld
-        self.zWorld = zWorld
+        self.xWorld = x_world
+        self.yWorld = y_world
+        self.zWorld = z_world
         self.zdim = 0
-        self.type = type
+        self.type = type_
         self.update()
 
     @staticmethod
