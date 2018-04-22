@@ -525,52 +525,60 @@ class DisplayMain(object):
     @staticmethod
     def make_cliffs(x, y):
         """Produce a set of cliff sprites to go with a particular tile"""
-        returnvals = []
-        # A1/A2 are top and right vertices of tile in front/left of the one we're testing
+        result = []
+        # a1/a2 are top and right vertices of tile in front/left of the one we're testing
         if x == World.WorldX - 1:
-            A1 = 0
-            A2 = 0
+            a1 = 0
+            a2 = 0
         else:
-            A1 = World.array[x + 1][y][1][3] + World.array[x + 1][y][0]
-            A2 = World.array[x + 1][y][1][2] + World.array[x + 1][y][0]
-        # B1/B2 are left and bottom vertices of tile we're testing
-        B1 = World.array[x][y][1][0] + World.array[x][y][0]
-        B2 = World.array[x][y][1][1] + World.array[x][y][0]
-        while B1 > A1 or B2 > A2:
-            if B1 > B2:
-                B1 -= 1
-                tiletype = "CL10"
-            elif B1 == B2:
-                B1 -= 1
-                B2 -= 1
-                tiletype = "CL11"
+            a1 = World.array[x + 1][y][1][3] + World.array[x + 1][y][0]
+            a2 = World.array[x + 1][y][1][2] + World.array[x + 1][y][0]
+
+        # b1/b2 are left and bottom vertices of tile we're testing
+        b1 = World.array[x][y][1][0] + World.array[x][y][0]
+        b2 = World.array[x][y][1][1] + World.array[x][y][0]
+
+        while b1 > a1 or b2 > a2:
+            if b1 > b2:
+                b1 -= 1
+                tile_type = "CL10"
+            elif b1 == b2:
+                b1 -= 1
+                b2 -= 1
+                tile_type = "CL11"
             else:
-                B2 -= 1
-                tiletype = "CL01"
-            returnvals.append(TileSprite(tiletype, x, y, B1, exclude=True))
-        # A1/A2 are top and right vertices of tile in front/right of the one we're testing
+                b2 -= 1
+                tile_type = "CL01"
+
+            result.append(TileSprite(tile_type, x, y, b1, exclude=True))
+
+        # a1/a2 are top and right vertices of tile in front/right of the one we're testing
         if y == World.WorldY - 1:
-            A1 = 0
-            A2 = 0
+            a1 = 0
+            a2 = 0
         else:
-            A1 = World.array[x][y + 1][1][3] + World.array[x][y + 1][0]
-            A2 = World.array[x][y + 1][1][0] + World.array[x][y + 1][0]
-        # B1/B2 are left and bottom vertices of tile we're testing
-        B1 = World.array[x][y][1][2] + World.array[x][y][0]
-        B2 = World.array[x][y][1][1] + World.array[x][y][0]
-        while B1 > A1 or B2 > A2:
-            if B1 > B2:
-                B1 -= 1
-                tiletype = "CR10"
-            elif B1 == B2:
-                B1 -= 1
-                B2 -= 1
-                tiletype = "CR11"
+            a1 = World.array[x][y + 1][1][3] + World.array[x][y + 1][0]
+            a2 = World.array[x][y + 1][1][0] + World.array[x][y + 1][0]
+
+        # b1/b2 are left and bottom vertices of tile we're testing
+        b1 = World.array[x][y][1][2] + World.array[x][y][0]
+        b2 = World.array[x][y][1][1] + World.array[x][y][0]
+
+        while b1 > a1 or b2 > a2:
+            if b1 > b2:
+                b1 -= 1
+                tile_type = "CR10"
+            elif b1 == b2:
+                b1 -= 1
+                b2 -= 1
+                tile_type = "CR11"
             else:
-                B2 -= 1
-                tiletype = "CR01"
-            returnvals.append(TileSprite(tiletype, x, y, B1, exclude=True))
-        return returnvals
+                b2 -= 1
+                tile_type = "CR01"
+
+            result.append(TileSprite(tile_type, x, y, b1, exclude=True))
+
+        return result
 
     def screen_to_iso(self, wx, wy):
         """Convert screen coordinates to Iso world coordinates
