@@ -360,10 +360,10 @@ class DisplayMain(object):
             # Also need to look up tiles at (x-1,y) and (x,y-1) and have them re-evaluate their cliffs too
             # This needs to check that a) that tile hasn't already been re-evaluated and that
             # b) that tile isn't one of the ones which we're checking, i.e. not in tiles
-            if not (x - 1, y) in tiles and not (x - 1, y) in nearby_tiles:
+            if (x - 1, y) not in tiles and (x - 1, y) not in nearby_tiles:
                 nearby_tiles.append((x - 1, y))
 
-            if not (x, y - 1) in tiles and not (x, y - 1) in nearby_tiles:
+            if (x, y - 1) not in tiles and (x, y - 1) not in nearby_tiles:
                 nearby_tiles.append((x, y - 1))
 
         # This is a direct reference back to the aoe specified in the tool,
