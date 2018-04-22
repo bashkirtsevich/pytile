@@ -588,7 +588,7 @@ class DisplayMain(object):
 
         # Convert coordinates to be relative to the position of tile (0,0)
         dx = wx - World.WorldWidth2
-        dy = wy - (p2)
+        dy = wy - p2
 
         # Do some maths
         x = int((dy + (dx / tile_ratio)) / p2)
