@@ -354,20 +354,22 @@ class DisplayMain(object):
     def update_world(self, tiles, highlight=None):
         """Instead of completely regenerating the entire world, just update certain tiles"""
         # Add all the items in tiles to the checked_nearby hash table
-        nearbytiles = []
+        nearby_tiles = []
         for t in tiles:
             x, y = t
             # Also need to look up tiles at (x-1,y) and (x,y-1) and have them re-evaluate their cliffs too
             # This needs to check that a) that tile hasn't already been re-evaluated and that
             # b) that tile isn't one of the ones which we're checking, i.e. not in tiles
-            if not (x - 1, y) in tiles and not (x - 1, y) in nearbytiles:
-                nearbytiles.append((x - 1, y))
+            if not (x - 1, y) in tiles and not (x - 1, y) in nearby_tiles:
+                nearby_tiles.append((x - 1, y))
 
-            if not (x, y - 1) in tiles and not (x, y - 1) in nearbytiles:
-                nearbytiles.append((x, y - 1))
+            if not (x, y - 1) in tiles and not (x, y - 1) in nearby_tiles:
+                nearby_tiles.append((x, y - 1))
+
         # This is a direct reference back to the aoe specified in the tool,
         # need to make a copy to use this!
-        tiles.extend(nearbytiles)
+        tiles.extend(nearby_tiles)
+
         for t in tiles:
             x, y = t
             # If an override is defined in highlight for this tile,
