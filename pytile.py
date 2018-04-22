@@ -384,7 +384,7 @@ class DisplayMain(object):
                 self.dirty.append(t.rect)
 
                 # Calculate layer
-                l = self.get_layer(x, y)
+                layer = self.get_layer(x, y)
 
                 # Update the tile type
                 t.update_type()
@@ -406,7 +406,7 @@ class DisplayMain(object):
 
                 # Add the regenerated sprites back into the appropriate places
                 self.ordered_sprites_dict[(x, y)] = cliffs
-                self.ordered_sprites.add(cliffs, layer=l)
+                self.ordered_sprites.add(cliffs, layer=layer)
 
     @staticmethod
     def get_layer(x, y):
