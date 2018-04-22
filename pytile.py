@@ -42,8 +42,8 @@ FPS_REFRESH = 500
 class TextSprite(pygame.sprite.Sprite):
     """Subclass of sprite to draw text to the screen"""
 
-    def __init__(self, position, textstring, font, fg=(0, 0, 0), bg=None,
-                 borderwidth=0, bordercolour=(0, 0, 0),
+    def __init__(self, position, text, font, fg=(0, 0, 0), bg=None,
+                 border_width=0, border_color=(0, 0, 0),
                  bold=False, italic=False, underline=False,
                  line_spacing=3, padding=5):
         pygame.sprite.Sprite.__init__(self)
@@ -52,8 +52,8 @@ class TextSprite(pygame.sprite.Sprite):
         self.font = font
         self.fg = fg
         self.bg = bg
-        self.borderwidth = borderwidth
-        self.bordercolour = bordercolour
+        self.border_width = border_width
+        self.border_color = border_color
         self.line_spacing = line_spacing
         self.padding = padding
         self.font.set_bold(bold)
@@ -63,7 +63,7 @@ class TextSprite(pygame.sprite.Sprite):
         self.rect = None
         self.last_rect = None
 
-        self.text = textstring
+        self.text = text
         self.update()
 
     def update(self):
@@ -77,18 +77,18 @@ class TextSprite(pygame.sprite.Sprite):
         maxwidth = max(textimages, key=lambda x: x.get_width()).get_width()
         # Produce an image to hold all of the text strings
         self.image = pygame.Surface(
-            (maxwidth + 2 * (self.borderwidth + self.padding),
+            (maxwidth + 2 * (self.border_width + self.padding),
              textimages[0].get_height() * len(textimages) + self.line_spacing * (len(textimages) - 1) + 2 * (
-                     self.borderwidth + self.padding)
+                     self.border_width + self.padding)
              )
         )
         self.image.fill(self.bg)
-        if self.borderwidth > 0:
-            pygame.draw.rect(self.image, self.bordercolour,
-                             (0, 0, self.image.get_width(), self.image.get_height()), self.borderwidth)
+        if self.border_width > 0:
+            pygame.draw.rect(self.image, self.border_color,
+                             (0, 0, self.image.get_width(), self.image.get_height()), self.border_width)
         for n, t in enumerate(textimages):
-            self.image.blit(t, (self.borderwidth + self.padding,
-                                self.borderwidth + self.padding + (self.line_spacing + t.get_height()) * n))
+            self.image.blit(t, (self.border_width + self.padding,
+                                self.border_width + self.padding + (self.line_spacing + t.get_height()) * n))
 
         # Store the last rect so if the new one is smaller we can update those bits of the screen too
         self.last_rect = self.rect
