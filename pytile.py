@@ -580,16 +580,20 @@ class DisplayMain(object):
 
         return result
 
-    def screen_to_iso(self, wx, wy):
+    @staticmethod
+    def screen_to_iso(wx, wy):
         """Convert screen coordinates to Iso world coordinates
         returns tuple of iso coords"""
-        TileRatio = 2.0
+        tile_ratio = 2.0
+
         # Convert coordinates to be relative to the position of tile (0,0)
         dx = wx - World.WorldWidth2
         dy = wy - (p2)
+
         # Do some maths
-        x = int((dy + (dx / TileRatio)) / p2)
-        y = int((dy - (dx / TileRatio)) / p2)
+        x = int((dy + (dx / tile_ratio)) / p2)
+        y = int((dy - (dx / tile_ratio)) / p2)
+
         return x, y
 
 
