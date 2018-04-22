@@ -105,7 +105,8 @@ class TileSprite(pygame.sprite.Sprite):
     image = None
     kind = "tile"
 
-    def create_subsurface(self, rect):
+    @staticmethod
+    def create_subsurface(rect):
         result = TileSprite.image.subsurface(rect)
         result.convert()
         result.set_colorkey((231, 255, 255), pygame.RLEACCEL)
