@@ -268,9 +268,6 @@ class DisplayMain(object):
         # Initiate the clock
         self.clock = pygame.time.Clock()
 
-        ##        background = pygame.Surface([self.screen_width, self.screen_height])
-        ##        background.fill([0, 0, 0])
-
         self.orderedSprites = pygame.sprite.LayeredUpdates()
         self.orderedSpritesDict = {}
 
