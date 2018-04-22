@@ -193,13 +193,14 @@ class TileSprite(pygame.sprite.Sprite):
 
     def change_highlight(self, type):
         """Update this tile's image with a highlight"""
+        tiletype = self.type
+
         image = pygame.Surface((p, p))
         image.fill((231, 255, 255))
-        image.blit(TileSprite.tile_images[self.type], (0, 0))
-        tiletype = self.type
+        image.blit(TileSprite.tile_images[tiletype], (0, 0))
+
         if type == 0:
-            # Empty Image
-            pass
+            pass  # Empty Image
         # Corner bits, made up of two images
         elif type == 1:
             image.blit(TileSprite.highlight_images["%sXX%s" % (tiletype[0], tiletype[3])], (0, 0), (0, 0, p4, p))
@@ -228,9 +229,12 @@ class TileSprite(pygame.sprite.Sprite):
             image.blit(TileSprite.highlight_images["X%s%sX" % (tiletype[1], tiletype[2])], (0, 0))
             image.blit(TileSprite.highlight_images["XX%s%s" % (tiletype[2], tiletype[3])], (0, 0))
             image.blit(TileSprite.highlight_images["%sXX%s" % (tiletype[0], tiletype[3])], (0, 0))
+
         image.set_colorkey((231, 255, 255), pygame.RLEACCEL)
+
         self.image = image
         self.mask = pygame.mask.from_surface(self.image)
+
         return self.rect
 
     def array_to_string(self, array):
@@ -586,6 +590,7 @@ class DisplayMain(object):
 
 if __name__ == "__main__":
     import os
+
     os.environ["SDL_VIDEO_CENTERED"] = "1"
     WINDOW_WIDTH = 1024
     WINDOW_HEIGHT = 768
