@@ -210,12 +210,8 @@ class DisplayMain(object):
         self.ordered_sprites = pygame.sprite.LayeredUpdates()
         self.ordered_sprites_dict = {}
 
-    def MainLoop(self):
-        """This is the Main Loop of the Game"""
-        self.paint_world()
-
         # Sprite used to find what the cursor is selecting
-        self.mouseSprite = None
+        self.mouse_sprite = None
         # Settings for FPS counter
         self.fps_refresh = DisplayMain.FPS_REFRESH
         self.fps_elapsed = 0
@@ -244,6 +240,8 @@ class DisplayMain(object):
             bold=False)
         self.overlay_sprites.add(self.active_tool_sprite, layer=100)
 
+    def main_loop(self):
+        """This is the Main Loop of the Game"""
         while True:
             self.clock.tick(0)
             # If there's a quit event, don't bother parsing the event queue
@@ -542,4 +540,4 @@ if __name__ == "__main__":
     WINDOW_WIDTH = 1024
     WINDOW_HEIGHT = 768
     MainWindow = DisplayMain(WINDOW_WIDTH, WINDOW_HEIGHT)
-    MainWindow.MainLoop()
+    MainWindow.main_loop()
