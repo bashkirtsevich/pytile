@@ -42,6 +42,8 @@ class TileSprite(pygame.sprite.Sprite):
     """Ground tiles"""
     image = None
     kind = "tile"
+    tile_images = dict()
+    highlight_images = dict()
 
     def __init__(self, type_, x_world, y_world, z_world, exclude=False):
         pygame.sprite.Sprite.__init__(self)
@@ -60,7 +62,6 @@ class TileSprite(pygame.sprite.Sprite):
                   ], 0)
             ]
             # Tile images will be composited using rendering later, for now just read them in
-            TileSprite.tile_images = dict()
             for item in tile_images_keys:
                 for idx, key in enumerate(item[0]):
                     TileSprite.tile_images[key] = self.create_subsurface((idx * p, item[1] * p, p, p))
@@ -74,7 +75,6 @@ class TileSprite(pygame.sprite.Sprite):
                 (["0XX0", "1XX0", "0XX1", "1XX1", "2XX1", "1XX2", "2XX2"], 7),  # top-left edge
             ]
 
-            TileSprite.highlight_images = dict()
             for item in highlight_images_keys:
                 for idx, key in enumerate(item[0]):
                     TileSprite.highlight_images[key] = self.create_subsurface((idx * p, item[1] * p, p, p))
