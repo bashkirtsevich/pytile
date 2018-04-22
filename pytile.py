@@ -59,24 +59,25 @@ class TextSprite(pygame.sprite.Sprite):
         self.font.set_underline(underline)
 
         self.rect = None
-        self.last_rect = None
+
+        self.image = None
 
         self.text = text
         self.update()
 
     def update(self):
         """"""
-        textimages = []
+        text_images = []
         # Render all lines of text
         for t in self.text:
-            textimages.append(self.font.render(t, False, self.fg, self.bg))
+            text_images.append(self.font.render(t, False, self.fg, self.bg))
 
         # Find the largest width line of text
-        maxwidth = max(textimages, key=lambda x: x.get_width()).get_width()
+        max_width = max(text_images, key=lambda x: x.get_width()).get_width()
         # Produce an image to hold all of the text strings
         self.image = pygame.Surface(
-            (maxwidth + 2 * (self.border_width + self.padding),
-             textimages[0].get_height() * len(textimages) + self.line_spacing * (len(textimages) - 1) + 2 * (
+            (max_width + 2 * (self.border_width + self.padding),
+             text_images[0].get_height() * len(text_images) + self.line_spacing * (len(text_images) - 1) + 2 * (
                      self.border_width + self.padding)
              )
         )
@@ -84,18 +85,18 @@ class TextSprite(pygame.sprite.Sprite):
         if self.border_width > 0:
             pygame.draw.rect(self.image, self.border_color,
                              (0, 0, self.image.get_width(), self.image.get_height()), self.border_width)
-        for n, t in enumerate(textimages):
+        for n, t in enumerate(text_images):
             self.image.blit(t, (self.border_width + self.padding,
                                 self.border_width + self.padding + (self.line_spacing + t.get_height()) * n))
 
         # Store the last rect so if the new one is smaller we can update those bits of the screen too
-        self.last_rect = self.rect
+        last_rect = self.rect
         self.rect = pygame.Rect(self.position[0], self.position[1], self.image.get_width(), self.image.get_height())
 
-        if self.last_rect is None:
+        if last_rect is None:
             return self.rect
         else:
-            return self.last_rect.union(self.rect)
+            return last_rect.union(self.rect)
 
 
 class TileSprite(pygame.sprite.Sprite):
