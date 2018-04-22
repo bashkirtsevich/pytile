@@ -82,9 +82,11 @@ class TextSprite(pygame.sprite.Sprite):
              )
         )
         self.image.fill(self.bg)
+
         if self.border_width > 0:
             pygame.draw.rect(self.image, self.border_color,
                              (0, 0, self.image.get_width(), self.image.get_height()), self.border_width)
+
         for n, t in enumerate(text_images):
             self.image.blit(t, (self.border_width + self.padding,
                                 self.border_width + self.padding + (self.line_spacing + t.get_height()) * n))
