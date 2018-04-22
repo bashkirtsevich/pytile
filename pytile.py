@@ -91,6 +91,9 @@ class TileSprite(pygame.sprite.Sprite):
         self.zWorld = z_world
         self.zdim = 0
         self.type = type_
+        self.xpos = None
+        self.ypos = None
+        self.rect = None
         self.update()
 
     @staticmethod
