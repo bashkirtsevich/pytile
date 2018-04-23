@@ -69,7 +69,7 @@ class Tool(object):
 
     def process_key(self, key):
         """Process keystrokes sent to this tool"""
-        keyname = pygame.key.name(key)
+        pygame.key.name(key)
         return False
 
     def mouse_down(self, position, collisionlist):
@@ -208,7 +208,8 @@ class Move(Tool):
             self.move_screen(self.start, self.current)
         self.start = self.current
 
-    def move_screen(self, start, end):
+    @staticmethod
+    def move_screen(start, end):
         """Move the screen on mouse input"""
         start_x, start_y = start
         end_x, end_y = end
@@ -237,17 +238,19 @@ class Track(Tool):
 
     def process_key(self, key):
         """Process keystrokes sent to this tool"""
-        keyname = pygame.key.name(key)
-        ret = False
-        if keyname == "1":
+        key_name = pygame.key.name(key)
+        if key_name == "1":
             Track.width = 1
             ret = True
-        elif keyname == "2":
+        elif key_name == "2":
             Track.width = 2
             ret = True
+        else:
+            ret = False
         return ret
 
-    def find_highlight(self, x, y, subtile):
+    @staticmethod
+    def find_highlight(x, y, subtile):
         """Find the primary area of effect of the tool, based on tool dimensions
         Return a list of tiles to modify in [(x,y), modifier] form
         Used to specify region which will be highlighted"""
@@ -363,7 +366,8 @@ class Track(Tool):
                 self.tile = None
                 self.subtile = None
 
-    def collide_convert(self, subtile, start=False, end=False):
+    @staticmethod
+    def collide_convert(subtile, start=False, end=False):
         """Convert subtile edge locations from collide_detect form to track drawing form"""
         # 9 equates to the middle of the tile, not doing anything with that for the moment
         if subtile == 9:
@@ -474,7 +478,7 @@ class Terrain(Tool):
         """Tool updated, current cursor position is newpos"""
         # If start is None, then there's no dragging operation ongoing, just update the position of the highlight
         self.current = position
-        if self.start == None:
+        if self.start is None:
             tile = self.collide_locate(self.current, collisionlist)
             # print("tile is: %s" % tile)
             if tile and not tile.exclude:
@@ -557,7 +561,8 @@ class Terrain(Tool):
         # This will always be a whole tile raise/lower
         # If subtile is None, this is always a whole tile raise/lower
         # If subtile is something, and there's only one tile in the array then this is a single tile action
-        # If subtile is something, and there's more than one tile in the array then this is a multi-tile action, but based
+        # If subtile is something, and there's more than one tile in the array then this is a multi-tile action,
+        # but based
         #   off a vertex rather than a face
         vertices = []
         # Lowering terrain, find maximum value to start from
@@ -718,20 +723,18 @@ class Terrain(Tool):
         for k in checked.keys():
             World.set_height(checked[k], k)
 
-    def compare_vertex_higher(self, tgrid1, tgrid2, v1, v2):
+    @staticmethod
+    def compare_vertex_higher(tgrid1, tgrid2, v1, v2):
         """Return True if specified vertex of tgrid1 is higher than specified vertex of tgrid2"""
-        if v1 == None or v2 == None:
-            return False
-        if tgrid1[v1] + tgrid1.height > tgrid2[v2] + tgrid2.height:
-            return True
-        else:
+        if v1 is None or v2 is None:
             return False
 
-    def compare_vertex_lower(self, tgrid1, tgrid2, v1, v2):
+        return tgrid1[v1] + tgrid1.height > tgrid2[v2] + tgrid2.height
+
+    @staticmethod
+    def compare_vertex_lower(tgrid1, tgrid2, v1, v2):
         """Return True if specified vertex of tgrid1 is lower than specified vertex of tgrid2"""
-        if v1 == None or v2 == None:
+        if v1 is None or v2 is None:
             return False
-        if tgrid1[v1] + tgrid1.height < tgrid2[v2] + tgrid2.height:
-            return True
-        else:
-            return False
+
+        return tgrid1[v1] + tgrid1.height < tgrid2[v2] + tgrid2.height
