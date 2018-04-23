@@ -539,7 +539,7 @@ class Terrain(Tool):
                     r = self.modify_tiles(self.tiles, diff, subtile=self.subtile, soft=Terrain.smooth)
                 # Addback is calcuated as the actual height change minus the requested height change. 
                 # The remainder is the amount of cursor movement which doesn't actually do anything.
-                # For example, if the cursor moves down (lowering the terrain) and hits the "0" level 
+                # For example, if the cursor moves down (lowering the terrain) and hits the "0" level
                 # of the terrain we can't continue to lower the terrain. The cursor keeps moving 
                 # however and the addback value keeps track of this so that when the cursor starts to 
                 # move up it won't start raising the terrain until it hits the "0" level again
@@ -617,6 +617,7 @@ class Terrain(Tool):
                     self.aoe.append((x, y))
             step = 1
             for i in range(0, amount, step):
+                # TODO: Fix it when "vertices" is empty
                 minval = min(vertices, key=lambda x: x[0])[0]
                 for p in vertices:
                     if p[0] == minval:
