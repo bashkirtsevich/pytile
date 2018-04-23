@@ -1,3 +1,4 @@
+import math
 import sys
 
 import pygame
@@ -5,7 +6,6 @@ import pygame
 import tools
 import world
 from text_sprite import TextSprite
-from vec2d import *
 
 World = world.World()
 
