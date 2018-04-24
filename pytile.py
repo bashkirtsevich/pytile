@@ -285,11 +285,6 @@ class DisplayMain(object):
                     if not self.lmb_tool.process_key(event.key):
                         # process_key() will always return False if it hasn't processed the key,
                         # so that keys can be used for other things if a tool doesn't want them
-                        if event.key == pygame.K_t:
-                            # Activate track drawing mode
-                            self.lmb_tool = tools.Track()
-                            self.active_tool_sprite.text_lines = ["Track drawing"]
-                            self.dirty.append(self.active_tool_sprite.update())
                         if event.key == pygame.K_h:
                             # Activate terrain modification mode
                             self.lmb_tool = tools.Terrain()
