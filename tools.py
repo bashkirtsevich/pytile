@@ -144,7 +144,7 @@ class Tool(object):
             if collision_list:
                 collision_list.reverse()
                 for t in collision_list:
-                    if t.exclude == False:
+                    if not t.exclude:
                         return t
                 return None
             else:
@@ -153,14 +153,15 @@ class Tool(object):
         else:
             return None
 
-    def subtile_position(self, mousepos, tile):
+    @staticmethod
+    def subtile_position(mousepos, tile):
         """Find the sub-tile position of the cursor"""
         x = tile.x_world
         y = tile.y_world
         # Find where this tile would've been drawn on the screen, and subtract the mouse's position
         mousex, mousey = mousepos
         posx = World.WorldWidth2 - (x * (p2)) + (y * (p2)) - p2
-        posy = (x * (p4)) + (y * (p4)) - (World.array[x][y][0] * ph)
+        posy = x * p4 + y * p4 - World.array[x][y][0] * ph
         offx = mousex - (posx - World.dxoff)
         offy = mousey - (posy - World.dyoff)
         # Then compare these offsets to the table of values for this particular kind of tile
