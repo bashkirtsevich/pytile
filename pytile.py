@@ -9,23 +9,6 @@ from text_sprite import TextSprite
 
 World = world.World()
 
-# Some useful colours
-grey = (100, 100, 100)
-light_gray = (200, 200, 200)
-red = (255, 0, 0)
-dark_red = (192, 0, 0)
-green = (0, 255, 0)
-dark_green = (0, 128, 0)
-blue = (0, 0, 255)
-dark_blue = (0, 0, 192)
-brown = (72, 64, 0)
-silver = (224, 216, 216)
-black = (0, 0, 0)
-white = (255, 255, 255)
-yellow = (255, 255, 0)
-
-transparent = (231, 255, 255)
-
 # Pre-compute often used multiples
 p = 64
 p2 = int(p / 2)
