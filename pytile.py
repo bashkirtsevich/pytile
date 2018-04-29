@@ -443,13 +443,21 @@ class DisplayMain(object):
                         tile = highlight[(x, y)]
                     else:
                         tile = World.array[x][y]
-
                     layer = self.get_layer(x, y)
                     # Add the main tile
                     tile_type = self.array_to_string(tile[1])
                     t = TileSprite(tile_type, x, y, tile[0], exclude=False)
                     add_to_dict = [t]
 
+                    # Update cursor highlight for tile (if it has one)
+                    try:
+                        tile[3]
+                    except IndexError:
+                        pass
+                    else:
+                        t.change_highlight(tile[3])
+
+                    add_to_dict.append(t)
                     self.ordered_sprites.add(t, layer=layer)
 
                     # Add vertical surfaces (cliffs) for this tile (if any)
