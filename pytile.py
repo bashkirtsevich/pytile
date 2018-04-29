@@ -397,11 +397,7 @@ class DisplayMain(object):
                 # Update the tile image
                 t.update()
                 # Update cursor highlight for tile (if it has one)
-                try:
-                    tile[3]
-                except IndexError:
-                    pass
-                else:
+                if len(tile) >= 4:
                     t.change_highlight(tile[3])
                 self.dirty.append(t.update_xyz())
 
@@ -450,11 +446,7 @@ class DisplayMain(object):
                     add_to_dict = [t]
 
                     # Update cursor highlight for tile (if it has one)
-                    try:
-                        tile[3]
-                    except IndexError:
-                        pass
-                    else:
+                    if len(tile) >= 4:
                         t.change_highlight(tile[3])
 
                     add_to_dict.append(t)
