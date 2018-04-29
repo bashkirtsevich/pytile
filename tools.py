@@ -160,7 +160,7 @@ class Tool(object):
         y = tile.y_world
         # Find where this tile would've been drawn on the screen, and subtract the mouse's position
         mousex, mousey = mousepos
-        posx = World.WorldWidth2 - (x * (p2)) + (y * (p2)) - p2
+        posx = World.WorldWidth2 - x * p2 + y * p2 - p2
         posy = x * p4 + y * p4 - World.array[x][y][0] * ph
         offx = mousex - (posx - World.dxoff)
         offy = mousey - (posy - World.dyoff)
