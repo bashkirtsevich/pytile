@@ -183,7 +183,7 @@ class Move(Tool):
 
     def __init__(self):
         """First time the Move tool is used"""
-        super(Move, self).__init__()
+        super().__init__()
         self.start = None
         self.current = None
 
@@ -228,7 +228,7 @@ class Terrain(Tool):
     def __init__(self):
         """First time the Terrain tool is used"""
         # Call init method of parent
-        super(Terrain, self).__init__()
+        super().__init__()
         # tiles - all the tiles in the primary area of effect (ones which are modified first)
         self.tiles = []
         # Other variables used
