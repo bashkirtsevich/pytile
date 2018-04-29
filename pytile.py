@@ -435,8 +435,6 @@ class DisplayMain(object):
                 x = int(top_left_tile_x - x1 + math.ceil(y1 / 2.0))
                 y = int(top_left_tile_y + x1 + math.floor(y1 / 2.0))
 
-                add_to_dict = []
-
                 # Tile must be within the bounds of the map
                 if (x >= 0 and y >= 0) and (x < World.WorldX and y < World.WorldY):
                     # If an override is defined in highlight for this tile,
@@ -450,7 +448,7 @@ class DisplayMain(object):
                     # Add the main tile
                     tile_type = self.array_to_string(tile[1])
                     t = TileSprite(tile_type, x, y, tile[0], exclude=False)
-                    add_to_dict.append(t)
+                    add_to_dict = [t]
 
                     self.ordered_sprites.add(t, layer=layer)
 
