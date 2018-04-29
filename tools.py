@@ -189,10 +189,7 @@ class Move(Tool):
 
     def active(self):
         """Return true if tool currently being used and screen needs updating"""
-        if self.start:
-            return True
-        else:
-            return False
+        return bool(self.start)
 
     def mouse_down(self, position, collisionlist):
         """"""
