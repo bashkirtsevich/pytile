@@ -214,7 +214,7 @@ class DisplayMain(object):
         # Setup fonts
         self.font = pygame.font.Font(None, 12)
 
-        self.refresh_screen = 1
+        self.refresh_screen = True
 
         self.ordered_sprites = pygame.sprite.LayeredUpdates()
         self.ordered_sprites_dict = {}
@@ -304,7 +304,7 @@ class DisplayMain(object):
                     self.screen_height = event.h
                     self.screen = pygame.display.set_mode((self.screen_width, self.screen_height), pygame.RESIZABLE)
                     self.paint_world()
-                    self.refresh_screen = 1
+                    self.refresh_screen = True
 
             if self.lmb_tool.has_aoe_changed():
                 # Update the screen to reflect changes made by tools
@@ -316,7 +316,7 @@ class DisplayMain(object):
             if self.rmb_tool.active():
                 # Repaint the entire screen until something better is implemented
                 self.paint_world()
-                self.refresh_screen = 1
+                self.refresh_screen = True
 
             # Write some useful info on the top bar
             self.fps_elapsed += self.clock.get_time()
@@ -336,12 +336,12 @@ class DisplayMain(object):
 
             # If land height has been altered, or the screen has been moved
             # we need to refresh the entire screen
-            if self.refresh_screen == 1:
+            if self.refresh_screen:
                 self.screen.fill((0, 0, 0))
                 self.ordered_sprites.draw(self.screen)
                 self.overlay_sprites.draw(self.screen)
                 pygame.display.update()
-                self.refresh_screen = 0
+                self.refresh_screen = False
             else:
                 for r in self.dirty:
                     self.screen.fill((0, 0, 0), r)
@@ -424,7 +424,7 @@ class DisplayMain(object):
         Includes ground and other objects"""
         # highlight defines tiles which should override the tiles stored in World
         # can be accessed in the same way as World
-        self.refresh_screen = 1
+        self.refresh_screen = True
         self.ordered_sprites.empty()  # This doesn't necessarily delete the sprites though?
         self.ordered_sprites_dict = {}
         # Top-left of view relative to world given by self.dxoff, self.dyoff
