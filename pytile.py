@@ -449,7 +449,6 @@ class DisplayMain(object):
                     if len(tile) >= 4:
                         t.change_highlight(tile[3])
 
-                    add_to_dict.append(t)
                     self.ordered_sprites.add(t, layer=layer)
 
                     # Add vertical surfaces (cliffs) for this tile (if any)
