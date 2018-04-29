@@ -72,15 +72,15 @@ class Tool(object):
         pygame.key.name(key)
         return False
 
-    def mouse_down(self, position, collisionlist):
+    def mouse_down(self, position, collision_list):
         """Mouse button DOWN"""
         pass
 
-    def mouse_up(self, position, collisionlist):
+    def mouse_up(self, position, collision_list):
         """Mouse button UP"""
         pass
 
-    def mouse_move(self, position, collisionlist):
+    def mouse_move(self, position, collision_list):
         """Tool updated, current cursor position is newpos"""
         pass
 
@@ -191,16 +191,16 @@ class Move(Tool):
         """Return true if tool currently being used and screen needs updating"""
         return bool(self.start)
 
-    def mouse_down(self, position, collisionlist):
+    def mouse_down(self, position, collision_list):
         """"""
         self.start = position
 
-    def mouse_up(self, position, collisionlist):
+    def mouse_up(self, position, collision_list):
         """"""
         self.current = position
         self.start = None
 
-    def mouse_move(self, position, collisionlist):
+    def mouse_move(self, position, collision_list):
         """"""
         self.current = position
         if self.start:
@@ -291,23 +291,23 @@ class Terrain(Tool):
             tiles[(x, y)] = t
         return tiles
 
-    def mouse_down(self, position, collisionlist):
+    def mouse_down(self, position, collision_list):
         """Reset the start position for a new operation"""
         self.start = position
         self.addback = 0
 
-    def mouse_up(self, position, collisionlist):
+    def mouse_up(self, position, collision_list):
         """End of application of tool"""
         self.current = position
         self.tiles = []
         self.start = None
 
-    def mouse_move(self, position, collisionlist):
+    def mouse_move(self, position, collision_list):
         """Tool updated, current cursor position is newpos"""
         # If start is None, then there's no dragging operation ongoing, just update the position of the highlight
         self.current = position
         if self.start is None:
-            tile = self.collide_locate(self.current, collisionlist)
+            tile = self.collide_locate(self.current, collision_list)
             # print("tile is: %s" % tile)
             if tile and not tile.exclude:
                 subtile = self.subtile_position(self.current, tile)
@@ -329,7 +329,7 @@ class Terrain(Tool):
         else:
             # If we don't already have a list of tiles to use as the primary area of effect
             if not self.tiles:
-                tile = self.collide_locate(self.current, collisionlist)
+                tile = self.collide_locate(self.current, collision_list)
                 if tile and not tile.exclude:
                     subtile = self.subtile_position(self.current, tile)
                     self.tiles = self.find_rect_aoe(tile.x_world, tile.y_world)
