@@ -185,6 +185,7 @@ class Move(Tool):
         """First time the Move tool is used"""
         super(Move, self).__init__()
         self.start = None
+        self.current = None
 
     def active(self):
         """Return true if tool currently being used and screen needs updating"""
