@@ -7,8 +7,6 @@ import tools
 import world
 from text_sprite import TextSprite
 
-World = world.World()
-
 # Pre-compute often used multiples
 p = 64
 p2 = int(p / 2)
@@ -28,7 +26,7 @@ class TileSprite(pygame.sprite.Sprite):
     tile_images = dict()
     highlight_images = dict()
 
-    def __init__(self, type_, x_world, y_world, z_world, exclude=False):
+    def __init__(self, world, type_, x_world, y_world, z_world, exclude=False):
         pygame.sprite.Sprite.__init__(self)
         if TileSprite.image is None:
             ground_image = pygame.image.load("textures.png")
@@ -77,6 +75,7 @@ class TileSprite(pygame.sprite.Sprite):
         self.x_pos = None
         self.y_pos = None
         self.rect = None
+        self.world = world
 
         self.update()
 
@@ -94,20 +93,20 @@ class TileSprite(pygame.sprite.Sprite):
         y = self.y_world
         z = self.z_world
         # Global screen positions
-        self.x_pos = World.WorldWidth2 - (x * p2) + (y * p2) - p2
+        self.x_pos = self.world.WorldWidth2 - (x * p2) + (y * p2) - p2
         self.y_pos = (x * p4) + (y * p4) - (z * ph)
         # Rect position takes into account the offset
-        self.rect = (self.x_pos - World.dxoff, self.y_pos - World.dyoff, p, p)
+        self.rect = (self.x_pos - self.world.dxoff, self.y_pos - self.world.dyoff, p, p)
         return self.rect
 
     def update_xyz(self):
         """Update xyz coords to match those in the array"""
-        self.z_world = World.array[self.x_world][self.y_world][0]
+        self.z_world = self.world.array[self.x_world][self.y_world][0]
         return self.calc_rect()
 
     def update_type(self):
         """Update type to match those in the array"""
-        self.type = self.array_to_string(World.array[self.x_world][self.y_world][1])
+        self.type = self.array_to_string(self.world.array[self.x_world][self.y_world][1])
 
     def update(self):
         """Update sprite's rect and other attributes"""
@@ -194,7 +193,7 @@ class DisplayMain(object):
 
     FPS_REFRESH = 500
 
-    def __init__(self, width, height):
+    def __init__(self, width, height, world):
         # Initialize PyGame
         pygame.init()
 
@@ -251,6 +250,8 @@ class DisplayMain(object):
 
         # Clear the stack of dirty tiles
         self.dirty = []
+
+        self.world = world
 
     def main_loop(self):
         """This is the Main Loop of the Game"""
@@ -327,12 +328,12 @@ class DisplayMain(object):
                     layer = self.ordered_sprites.get_layer_of_sprite(ii)
                     pygame.display.set_caption(
                         "FPS: %i | Tile: (%s,%s) of type: %s, layer: %s | dxoff: %s dyoff: %s" %
-                        (self.clock.get_fps(), ii.x_world, ii.y_world, ii.type, layer, World.dxoff,
-                         World.dyoff))
+                        (self.clock.get_fps(), ii.x_world, ii.y_world, ii.type, layer, self.world.dxoff,
+                         self.world.dyoff))
                 else:
                     pygame.display.set_caption(
                         "FPS: %i | dxoff: %s dyoff: %s" %
-                        (self.clock.get_fps(), World.dxoff, World.dyoff))
+                        (self.clock.get_fps(), self.world.dxoff, self.world.dyoff))
 
             # If land height has been altered, or the screen has been moved
             # we need to refresh the entire screen
@@ -379,7 +380,7 @@ class DisplayMain(object):
             if highlight and (x, y) in highlight:
                 tile = highlight[(x, y)]
             else:
-                tile = World.array[x][y]
+                tile = self.world.array[x][y]
             # Look the tile up in the group using the position, this will give us the tile and all its cliffs
             if (x, y) in self.ordered_sprites_dict:
                 tile_set = self.ordered_sprites_dict[(x, y)]
@@ -423,24 +424,24 @@ class DisplayMain(object):
         self.ordered_sprites_dict = {}
         # Top-left of view relative to world given by self.dxoff, self.dyoff
         # Find the base-level tile at this position
-        top_left_tile_y, top_left_tile_x = self.screen_to_iso(World.dxoff, World.dyoff)
+        top_left_tile_y, top_left_tile_x = self.screen_to_iso(self.world.dxoff, self.world.dyoff)
         for x1 in range(int(self.screen_width / p + 1)):
             for y1 in range(int(self.screen_height / p4)):
                 x = int(top_left_tile_x - x1 + math.ceil(y1 / 2.0))
                 y = int(top_left_tile_y + x1 + math.floor(y1 / 2.0))
 
                 # Tile must be within the bounds of the map
-                if (x >= 0 and y >= 0) and (x < World.WorldX and y < World.WorldY):
+                if (x >= 0 and y >= 0) and (x < self.world.WorldX and y < self.world.WorldY):
                     # If an override is defined in highlight for this tile,
                     # update based on that rather than on contents of World
                     if highlight and (x, y) in highlight:
                         tile = highlight[(x, y)]
                     else:
-                        tile = World.array[x][y]
+                        tile = self.world.array[x][y]
                     layer = self.get_layer(x, y)
                     # Add the main tile
                     tile_type = self.array_to_string(tile[1])
-                    t = TileSprite(tile_type, x, y, tile[0], exclude=False)
+                    t = TileSprite(self.world, tile_type, x, y, tile[0], exclude=False)
                     add_to_dict = [t]
 
                     # Update cursor highlight for tile (if it has one)
@@ -455,21 +456,20 @@ class DisplayMain(object):
                         self.ordered_sprites.add(t, layer=layer)
                     self.ordered_sprites_dict[(x, y)] = add_to_dict
 
-    @staticmethod
-    def make_cliffs(x, y):
+    def make_cliffs(self, x, y):
         """Produce a set of cliff sprites to go with a particular tile"""
         result = []
         # a1/a2 are top and right vertices of tile in front/left of the one we're testing
-        if x == World.WorldX - 1:
+        if x == self.world.WorldX - 1:
             a1 = 0
             a2 = 0
         else:
-            a1 = World.array[x + 1][y][1][3] + World.array[x + 1][y][0]
-            a2 = World.array[x + 1][y][1][2] + World.array[x + 1][y][0]
+            a1 = self.world.array[x + 1][y][1][3] + self.world.array[x + 1][y][0]
+            a2 = self.world.array[x + 1][y][1][2] + self.world.array[x + 1][y][0]
 
         # b1/b2 are left and bottom vertices of tile we're testing
-        b1 = World.array[x][y][1][0] + World.array[x][y][0]
-        b2 = World.array[x][y][1][1] + World.array[x][y][0]
+        b1 = self.world.array[x][y][1][0] + self.world.array[x][y][0]
+        b2 = self.world.array[x][y][1][1] + self.world.array[x][y][0]
 
         while b1 > a1 or b2 > a2:
             if b1 > b2:
@@ -483,19 +483,19 @@ class DisplayMain(object):
                 b2 -= 1
                 tile_type = "CL01"
 
-            result.append(TileSprite(tile_type, x, y, b1, exclude=True))
+            result.append(TileSprite(self.world, tile_type, x, y, b1, exclude=True))
 
         # a1/a2 are top and right vertices of tile in front/right of the one we're testing
-        if y == World.WorldY - 1:
+        if y == self.world.WorldY - 1:
             a1 = 0
             a2 = 0
         else:
-            a1 = World.array[x][y + 1][1][3] + World.array[x][y + 1][0]
-            a2 = World.array[x][y + 1][1][0] + World.array[x][y + 1][0]
+            a1 = self.world.array[x][y + 1][1][3] + self.world.array[x][y + 1][0]
+            a2 = self.world.array[x][y + 1][1][0] + self.world.array[x][y + 1][0]
 
         # b1/b2 are left and bottom vertices of tile we're testing
-        b1 = World.array[x][y][1][2] + World.array[x][y][0]
-        b2 = World.array[x][y][1][1] + World.array[x][y][0]
+        b1 = self.world.array[x][y][1][2] + self.world.array[x][y][0]
+        b2 = self.world.array[x][y][1][1] + self.world.array[x][y][0]
 
         while b1 > a1 or b2 > a2:
             if b1 > b2:
@@ -509,18 +509,17 @@ class DisplayMain(object):
                 b2 -= 1
                 tile_type = "CR01"
 
-            result.append(TileSprite(tile_type, x, y, b1, exclude=True))
+            result.append(TileSprite(self.world, tile_type, x, y, b1, exclude=True))
 
         return result
 
-    @staticmethod
-    def screen_to_iso(wx, wy):
+    def screen_to_iso(self, wx, wy):
         """Convert screen coordinates to Iso world coordinates
         returns tuple of iso coords"""
         tile_ratio = 2.0
 
         # Convert coordinates to be relative to the position of tile (0,0)
-        dx = wx - World.WorldWidth2
+        dx = wx - self.world.WorldWidth2
         dy = wy - p2
 
         # Do some maths
@@ -536,5 +535,5 @@ if __name__ == "__main__":
     os.environ["SDL_VIDEO_CENTERED"] = "1"
     WINDOW_WIDTH = 1024
     WINDOW_HEIGHT = 768
-    MainWindow = DisplayMain(WINDOW_WIDTH, WINDOW_HEIGHT)
+    MainWindow = DisplayMain(WINDOW_WIDTH, WINDOW_HEIGHT, world.World())
     MainWindow.main_loop()
