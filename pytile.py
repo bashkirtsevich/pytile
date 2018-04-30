@@ -353,7 +353,7 @@ class DisplayMain(object):
     @staticmethod
     def array_to_string(array):
         """Convert a heightfield array to a string"""
-        return "%s%s%s%s" % (array[0], array[1], array[2], array[3])
+        return "{}{}{}{}".format(*array)
 
     def update_world(self, tiles, highlight=None):
         """Instead of completely regenerating the entire world, just update certain tiles"""
