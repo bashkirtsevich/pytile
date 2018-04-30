@@ -372,9 +372,7 @@ class DisplayMain(object):
 
         # This is a direct reference back to the aoe specified in the tool,
         # need to make a copy to use this!
-        tiles.extend(nearby_tiles)
-
-        for t in tiles:
+        for t in tiles + nearby_tiles:
             x, y = t
             # If an override is defined in highlight for this tile,
             # update based on that rather than on contents of World
