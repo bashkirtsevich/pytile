@@ -27,7 +27,7 @@ class TileSprite(pygame.sprite.Sprite):
     highlight_images = dict()
 
     def __init__(self, world, type_, x_world, y_world, z_world, exclude=False):
-        pygame.sprite.Sprite.__init__(self)
+        super().__init__()
         if TileSprite.image is None:
             ground_image = pygame.image.load("textures.png")
             TileSprite.image = ground_image.convert()
